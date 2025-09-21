@@ -499,23 +499,24 @@ Especialista em Tráfego & SEO para Moda`;
 
         await this._processUrlsInternal();
 
-        const allOpportunitiesForDashboard = [];
-        this.processUrls.forEach(result =>{
-            // as opotunidades estão concatenadas em uma string em result.oportunidade
-            // vamos separalas assumindo que são separadas por " | "
-            if (result.oportunidade) {
-                const opportunitiesArray = result.oportunidade.split(' | ').filter(opp => opp.trim() !== "")
-                allOpportunitiesForDashboard.push(...opportunitiesArray);
-            }
-        });
-
-        // Salvar no localstorage para o dashboarda acessar
-        try {
-            localStorage.setItem('coldOutreachOpportunities', JSON.stringify(allOpportunitiesForDashboard));
-            console.log('Oportunidades salvas no locastorege para o dashboard.');
-        } catch (e) {
-            console.error('erro ao salvar oportinudades no localstorage')
+       / Coletar todas as oportunidades de todas as URLs processadas
+    const allOpportunitiesForDashboard = [];
+    this.processedUrls.forEach(result => {
+        // As oportunidades estão concatenadas em uma string em result.oportunidade
+        // Vamos separá-las. Assumindo que são separadas por " | "
+        if (result.oportunidade) {
+            const opportunitiesArray = result.oportunidade.split(' | ').filter(opp => opp.trim() !== "");
+            allOpportunitiesForDashboard.push(...opportunitiesArray);
         }
+    });
+
+    // Salvar no localStorage para o dashboard acessar
+    try {
+        localStorage.setItem('coldOutreachOpportunities', JSON.stringify(allOpportunitiesForDashboard));
+        console.log('Oportunidades salvas no localStorage para o dashboard.');
+    } catch (e) {
+        console.error('Erro ao salvar oportunidades no localStorage:', e);
+}
 
         this.isProcessing = false;
         return this.processedUrls;
