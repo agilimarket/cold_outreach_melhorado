@@ -250,13 +250,56 @@ class ColdOutreachGenerator {
     }
 
     estimateProductCount(doc) {
-        // Procurar por indicadores de e-commerce
-        const text = doc.body.textContent || '';
-        if (text.includes('carrinho') || text.includes('shopping cart') || text.includes('adicionar ao carrinho')) {
-            return Math.floor(Math.random() * 200) + 50;
+        // Primeiro, tentar encontrar um número explícito de produtos
+        const productTextElements = doc.querySelectorAll('body');
+        const fullText = productTextElements.length > 0 ? productTextElements[0].textContent : '';
+        const productCountMatch = fullText.match(/(\d+)\s*(produto|produtos|itens?)/i);
+        if (productCountMatch) {
+            return parseInt(productCountMatch[1], 10);
         }
-        return Math.floor(Math.random() * 50);
+
+        // Se não encontrar número explícito, contar elementos que parecem produtos
+        // Esta é uma heurística simples, pode precisar de ajustes
+        const productIndicators = [
+            //'.product', '.item', '.product-item', '.product-card',
+            //'[data-product-id]', '[data-item-id]', '.grid-item'
+            '.product', '.item', '.product-item', '.product-card',
+            '[data-product-id]', '[data-item-id]', '.grid-item',
+            '.product-grid-item', '.product-tile', '.product-box',
+            '.catalog-item', '.shop-item', '.item-product',
+            '[data-productid]', '[data-pid]', '[data-sku]',
+            '[data-product-code]', '[data-itemid]', '[data-product-key]',
+            '.product-wrapper', '.item-wrapper', '.product-container',
+            '.prod-item', '.prod-card', '.prod-box',
+            '[data-prod-id]', '[data-product_id]', '[data-item_id]',
+            '.grid-product', '.list-item-product', '.product-list-item',
+            '[data-model]', '[data-ref-id]', '[data-catalog-id]',
+            '.catalog-product', '.shop-product', '.ecommerce-item',
+            '[id*="product"]', '[id*="item"]', '[class*="product"]', 
+            '[class*="item"]', '[data-*="product"]', '[data-*="item"]'
+        ];
+        let count = 0;
+        productIndicators.forEach(selector => {
+            try {
+                // Usar try/catch pois seletores inválidos podem lançar erro
+                count += doc.querySelectorAll(selector).length;
+            } catch (e) {
+                // Ignorar seletores inválidos
+        }
+    });
+    // Se encontrou elementos, retornar uma estimativa baseada neles
+    // Se não, usar a lógica original como fallback
+    if (count > 0) {
+         // Adicionar um fator de correção, pois nem todos os elementos são produtos visíveis
+         // Esta é uma estimativa grosseira
+         return Math.max(10, Math.floor(count * 0.7));
+    } else if (fullText.includes('carrinho') || fullText.includes('shopping cart') || fullText.includes('adicionar ao carrinho')) {
+        // Fallback para a lógica original se parecer um e-commerce
+        return Math.floor(Math.random() * 200) + 50;
     }
+    // Se não parece e-commerce
+    return Math.floor(Math.random() * 50);
+}
 
     findWhatsApp(doc) {
         const links = doc.querySelectorAll('a[href*="wa.me"], a[href*="whatsapp.com"], a[href*="api.whatsapp.com"]');
