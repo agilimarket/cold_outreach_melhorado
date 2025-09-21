@@ -175,7 +175,8 @@ class ColdOutreachGenerator {
                 whatsapp: this.findWhatsApp(doc),
                 blogUrl: this.findBlogUrl(doc, url)
             };
-        } catch (error)             console.error(\'Erro na análise do HTML:\', error);
+        } catch (error) {
+            console.error('Erro na análise do HTML:', error); // corrigido as aspas    
             return null;
     }
 }
