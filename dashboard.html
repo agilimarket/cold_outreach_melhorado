@@ -207,7 +207,44 @@
 
     <script>
         let chart = null;
+        
+        // Processa e Atualizar oportunidades reais das urls analisadas
+        function loadOpportunities() {
+    console.log("Tentando carregar oportunidades do localStorage...");
+    let opportunities = [];
+    try {
+        const data = localStorage.getItem('coldOutreachOpportunities');
+        if (data) {
+            opportunities = JSON.parse(data);
+            console.log("Oportunidades carregadas:", opportunities);
+        } else {
+            console.log("Nenhum dado encontrado no localStorage.");
+        }
+    } catch (e) {
+        console.error("Erro ao carregar ou analisar dados do localStorage:", e);
+        // Se falhar, usar dados simulados como fallback
+        console.log("Usando dados simulados como fallback.");
+        opportunities = [
+            'Perfil do Instagram não encontrado',
+            'Site lento - otimização de performance pode melhorar SEO e experiência do usuário',
+            // ... (restante dos dados simulados, se quiser manter como fallback)
+        ];
+    }
 
+    if (opportunities.length > 0) {
+        updateDashboard(opportunities);
+    } else {
+        // Mostrar mensagem no dashboard
+        document.getElementById('opportunities-detail').innerHTML = '<div class="no-data">Nenhuma oportunidade encontrada. Execute uma análise primeiro.</div>';
+        document.getElementById('total-opportunities').textContent = '0';
+        document.getElementById('unique-opportunities').textContent = '0';
+        document.getElementById('most-common').textContent = '-';
+        // Atualizar gráfico para vazio (opcional, Chart.js lida bem com arrays vazios)
+        updateChart([]);
+    }
+}
+
+        /* INICIO - Simular dados para demonstração
         function loadOpportunities() {
             // Simular dados para demonstração
             // Em uma implementação real, isso viria do localStorage ou de uma API
@@ -230,8 +267,8 @@
             ];
 
             updateDashboard(sampleOpportunities);
-        }
-
+        } FIM - Simular dados para demonstração
+        */
         function updateDashboard(opportunities) {
             // Contar frequências
             const counts = {};
