@@ -499,7 +499,7 @@ Especialista em Tráfego & SEO para Moda`;
 
         await this._processUrlsInternal();
 
-       / Coletar todas as oportunidades de todas as URLs processadas
+       // Coletar todas as oportunidades de todas as URLs processadas
     const allOpportunitiesForDashboard = [];
     this.processedUrls.forEach(result => {
         // As oportunidades estão concatenadas em uma string em result.oportunidade
