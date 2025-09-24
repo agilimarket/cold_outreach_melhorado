@@ -20,6 +20,14 @@ class ColdOutreachGenerator {
         this.requestTimeout = 10000; // 10 segundos para timeout
         this.estimatedTimePerUrl = 2000; // 2 segundos por URL (para estimativa)
         this.requestCache = new Map();
+<<<<<<< HEAD
+=======
+        // TAREFA A: CONFIGURAÇÃO DA API DE IA
+        // URL DA API DE GERAÇÃO DE TEXTO
+        //this.aiApiUrl = 'https://api.openai.com/v1/chat/completions';
+        //this.aiApiKey = '';
+        //=========================================================================
+>>>>>>> 09dbfe4 (fix retirada a chave api.)
         this.allOpportunities = []; // Novo array para armazenar todas as oportunidades
 
     }
